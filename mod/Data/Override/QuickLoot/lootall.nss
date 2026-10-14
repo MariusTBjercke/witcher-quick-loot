@@ -1,13 +1,12 @@
 //------------------------------------------------------------------------------------------------------------------------
-// lootall.nss - presses "Take all" in the loot window from a hotkey.
-// Does nothing unless the inventory is open in loot mode, so it can never buy everything in a shop.
+// lootall.nss - hotkey entry point for Witcher Quick Loot.
+// The logic lives in Lua (QuickLoot_TakeAllOrPause in System\Scripts\quickloot_hook.lua), so it can be
+// changed without recompiling: Take all in the loot window, otherwise the key's normal pause.
 // Bound to a hotkey by System\Scripts\quickloot_hook.lua (default: SPACE).
+// tools/build_lootall_ncs.py writes the matching .ncs without needing the game's compiler.
 //------------------------------------------------------------------------------------------------------------------------
 
 void main()
 {
-    RunClientLua(
-        "local p = g_GuiInGame and g_GuiInGame.lm_pNewInventoryPanel " +
-        "if p and p.lm_bActive and p:IsLootOpen() and p.lm_pTransferPanel then " +
-        "p.lm_pTransferPanel:TransferAll() end");
+    RunClientLua("QuickLoot_TakeAllOrPause()");
 }

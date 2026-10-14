@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- Fixed: Space no longer lost its pause. A bound key never reaches the game, so outside the loot window the hotkey now sends the game's own pause toggle (`TogglePauseRequest`). In shops and storage it still does nothing.
+- The Take all / pause logic moved to Lua (`QuickLoot_TakeAllOrPause` in `quickloot_hook.lua`); new setting `PAUSE_OUTSIDE_LOOT`.
+- Docs: keys missing from the game's control settings can still be hard-wired, like Space.
+
 ## 1.0.0
 
 - First release: Space presses "Take all" while a loot window is open, and does nothing anywhere else.

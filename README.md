@@ -1,13 +1,16 @@
 # Witcher Quick Loot
 
-A **Take all** hotkey for the loot window in **The Witcher: Enhanced Edition**. Press Space instead of reaching for the button with the mouse. There is no external program, AutoHotkey or trainer: everything runs inside the game's own script engine.
+A **Take all** hotkey for the loot window in **The Witcher: Enhanced Edition**. Press Space instead of reaching for the button with the mouse. Outside the loot window Space still pauses the game as before. There is no external program, AutoHotkey or trainer: everything runs inside the game's own script engine.
 
-| Key | Action |
-|---|---|
-| `Space` | Take all (only while a loot window is open) |
+| Key | Where | Action |
+|---|---|---|
+| `Space` | Loot window | Take all |
+| `Space` | Shop or storage | Nothing (it can never buy a shop's whole stock) |
+| `Space` | Anywhere else | Pause / unpause, exactly like the game's own Space |
 
-- It does exactly what the **Take all** button does, by calling the same game function.
-- It only acts while the inventory is open in **loot** mode. In shops, in storage and everywhere else the key does nothing, so it can never buy a shop's whole stock (tested in a shop).
+- **Take all** calls the same game function as the button.
+- **Pause** sends the same pause toggle the game's Space key sends, so the pause menu and unpausing behave as in the vanilla game. As in vanilla, Space does not pause while another panel (map, journal, …) is open.
+- All three cases were tested in game.
 
 ## Requirements
 
@@ -20,12 +23,14 @@ A **Take all** hotkey for the loot window in **The Witcher: Enhanced Edition**. 
    `...\steamapps\common\The Witcher Enhanced Edition\`
 3. Start the game. The hotkey is bound automatically on every launch.
 
+Updating from 1.0.0: copy the new files over the old ones. That gives Space its pause back.
+
 Files installed:
 
 | Path | Purpose |
 |---|---|
-| `Data\Override\QuickLoot\` | Compiled script (`.ncs`) and its source (`.nss`) |
-| `System\Scripts\quickloot_hook.lua` | Settings: hotkey and console |
+| `Data\Override\QuickLoot\` | Compiled hotkey script (`.ncs`) and its source (`.nss`) |
+| `System\Scripts\quickloot_hook.lua` | Settings and the Take all / pause logic |
 | `System\Scripts\testtools.lua` | Shared startup loader (see [Compatibility](#compatibility)) |
 
 ## Configuration
@@ -33,16 +38,18 @@ Files installed:
 Edit `System\Scripts\quickloot_hook.lua`:
 
 ```lua
-local LOOT_ALL_KEY = "SPACE"  -- one engine key name, see below; false leaves it unbound
-local ENABLE_CONSOLE = false  -- true enables the developer console (` character)
+local LOOT_ALL_KEY = "SPACE"     -- one engine key name, see below; false leaves it unbound
+local PAUSE_OUTSIDE_LOOT = true  -- the hotkey pauses/unpauses outside the loot window
+local ENABLE_CONSOLE = false     -- true enables the developer console (` character)
 ```
 
-When you change the key, the old key is unbound automatically on the next launch.
+When you change the key, the old key is unbound automatically on the next launch. If you move Take all to a key that should do nothing outside the loot window, set `PAUSE_OUTSIDE_LOOT = false`.
 
 ### What the hotkey can be
 
 The hotkey uses the engine's own `bindkey` command, which has these limits:
 
+- **A bound key no longer reaches the game.** The engine runs the binding *instead of* the key's normal action. That is why this mod performs Space's pause itself.
 - **One key, with no modifiers.** Combinations such as Shift+Space are not supported.
 - **Only the engine's key names are accepted.** Case does not matter:
   - `A`–`Z`, `0`–`9`, `F1`–`F12`
@@ -54,15 +61,15 @@ The hotkey uses the engine's own `bindkey` command, which has these limits:
   - `MINUS`, `EQUALS`, `LBRACKET`, `RBRACKET`, `BACKSLASH`, `SEMICOLON`, `APOSTROPHE`, `GRAVE`, `COMMA`, `PERIOD`, `FORWARDSLASH`
   - `MOUSE_BUTTON0`–`MOUSE_BUTTON2`, `JOYSTICK_BUTTON0`, `JOYSTICK_BUTTON1`
 - **Not available:** CapsLock, extra mouse buttons (4/5) and most gamepad buttons. The engine has no names for them.
-- **Pick a key the game does not use.** `SPACE` is free with the default controls. So are `V B N K O P Y`, `F4 F6 F7 F8 F10 F11 F12`, `0 9`, the numpad keys, and `INSERT HOME END DELETE`. Binding a key the game already uses has not been tested. Expect both the game's action and the loot to happen.
+- **Other keys may have hidden jobs too.** Keys missing from the game's control settings can still be hard-wired. Space (pause) is one of them. With the default controls, `V B N K O P Y`, `F4 F6 F7 F8 F10 F11 F12`, `0 9`, the numpad keys, and `INSERT HOME END DELETE` are not in the control settings, but they have not each been checked for hard-wired actions.
 
-What has been tested: `SPACE` on the Steam version. The other names come from the engine's key table and should work the same, but they have not been tried one by one.
+What has been tested: `SPACE` on the Steam version.
 
 ## Uninstall
 
 1. Delete `Data\Override\QuickLoot` and `System\Scripts\quickloot_hook.lua`.
 2. Also delete `System\Scripts\testtools.lua`, unless [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) is installed, because it uses the same file.
-3. Optionally delete `System\keybinding.ini`, which holds the engine's saved key macros.
+3. Delete `System\keybinding.ini`, or remove its `SPACE runscript lootall` line. Otherwise the engine keeps the binding and Space stays without pause.
 
 ## Compatibility
 
@@ -70,7 +77,12 @@ What has been tested: `SPACE` on the Steam version. The other names come from th
 
 ## How it works
 
-The game's startup Lua script (`startup.luc`) calls `g_Lua:PlayFile("testtools")`, but the retail release has no such file. This mod provides it as a small shared loader, which runs `quickloot_hook.lua`. The hook binds the key with the engine's built-in `bindkey` console command to `runscript lootall`. That NWScript uses `RunClientLua` to call the loot panel's own `TransferAll()`, the function behind the **Take all** button, guarded by `IsLootOpen()`.
+The game's startup Lua script (`startup.luc`) calls `g_Lua:PlayFile("testtools")`, but the retail release has no such file. This mod provides it as a small shared loader, which runs `quickloot_hook.lua`. The hook binds the key with the engine's built-in `bindkey` console command to `runscript lootall`. That one-line NWScript calls the Lua function `QuickLoot_TakeAllOrPause()` defined in the hook:
+
+- In the loot window it calls the loot panel's own `TransferAll()`, the function behind the **Take all** button, guarded by `IsLootOpen()`.
+- Elsewhere it calls `g_pClientExoApp:TogglePauseRequest()`. That is the engine's own pause toggle, the same one the Space key reaches.
+
+Because the logic is in Lua, it can be changed without recompiling the script.
 
 ## Building a release
 
@@ -78,7 +90,7 @@ The game's startup Lua script (`startup.luc`) calls `g_Lua:PlayFile("testtools")
 powershell -File tools\package-release.ps1
 ```
 
-This writes `dist\WitcherQuickLoot-<version>.zip`. The version is taken from `CHANGELOG.md`.
+This writes `dist\WitcherQuickLoot-<version>.zip`. The version is taken from `CHANGELOG.md`. `lootall.ncs` can be regenerated without the game with `python -I tools\build_lootall_ncs.py mod\Data\Override\QuickLoot\lootall.ncs`.
 
 ## License
 
