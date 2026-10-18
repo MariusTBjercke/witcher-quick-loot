@@ -64,8 +64,8 @@ Tested: SPACE on the Steam version.
 UNINSTALL
 ---------
 1. Delete Data\Override\QuickLoot and System\Scripts\quickloot_hook.lua.
-2. Also delete System\Scripts\testtools.lua, unless Witcher Speed Toggle is installed
-   (it uses the same file).
+2. Also delete System\Scripts\testtools.lua, unless Witcher Speed Toggle or Witcher
+   Engine Fix is installed (they use the same file).
 3. Delete System\keybinding.ini, or remove its "SPACE runscript lootall" line.
    Otherwise the engine keeps the binding and Space stays without pause.
 
@@ -73,9 +73,13 @@ UNINSTALL
 COMPATIBILITY / NOTES
 ---------------------
 - System\Scripts\testtools.lua is a shared loader: the retail game runs it on startup
-  but does not ship it. Witcher Speed Toggle 1.1.0+ ships the identical file, so the
-  two mods can be installed in any order. Speed Toggle 1.0.0 ships an older version of
-  that file - installing it after this mod turns the loot hotkey off, so update it.
+  but does not ship it. Witcher Speed Toggle 1.2.1+ and Witcher Engine Fix
+  (https://github.com/MariusTBjercke/witcher-enginefix) ship the identical file
+  (loader version 2), so the mods can be installed in any order. Speed Toggle 1.0.0
+  ships an older version of that file - installing it after this mod turns the loot
+  hotkey off. Speed Toggle 1.1.0 to 1.2.0 and Quick Loot 1.0.1 and older ship loader
+  version 1, which does not run Engine Fix's hook - installing one of them after
+  Engine Fix turns off its load/save-menu fix. Update both mods to the latest version.
   A mod from another author that replaces testtools.lua would break the hotkey - merge
   the two files by hand.
 - Tested on the Steam version (1.5.0.1304) with DXVK.

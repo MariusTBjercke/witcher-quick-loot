@@ -68,12 +68,12 @@ What has been tested: `SPACE` on the Steam version.
 ## Uninstall
 
 1. Delete `Data\Override\QuickLoot` and `System\Scripts\quickloot_hook.lua`.
-2. Also delete `System\Scripts\testtools.lua`, unless [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) is installed, because it uses the same file.
+2. Also delete `System\Scripts\testtools.lua`, unless [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) or [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix) is installed, because they use the same file.
 3. Delete `System\keybinding.ini`, or remove its `SPACE runscript lootall` line. Otherwise the engine keeps the binding and Space stays without pause.
 
 ## Compatibility
 
-- `System\Scripts\testtools.lua` is a shared loader. It is the only Lua file the game runs on startup that the retail release does not ship. [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) (1.1.0 or newer) ships the identical file, so the two mods can be installed in any order. Speed Toggle **1.0.0** ships an older, single-mod version of that file: installing it after this mod turns the loot hotkey off, so update it to 1.1.0. A mod from another author that replaces `testtools.lua` would break the hotkey; merge the two files by hand.
+- `System\Scripts\testtools.lua` is a shared loader. It is the only Lua file the game runs on startup that the retail release does not ship. [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) (1.2.1 or newer) and [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix) ship the identical file (loader version 2), so the mods can be installed in any order. Speed Toggle **1.0.0** ships an older, single-mod version of that file: installing it after this mod turns the loot hotkey off. Speed Toggle 1.1.0 to 1.2.0 and Quick Loot 1.0.1 and older ship loader version 1, which does not run Engine Fix's hook: installing one of them after Engine Fix turns off its load/save-menu fix. Update both mods to the latest version. A mod from another author that replaces `testtools.lua` would break the hotkey; merge the two files by hand.
 
 ## How it works
 

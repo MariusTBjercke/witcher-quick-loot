@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Shared loader version 2: also runs Witcher Engine Fix's hook (`enginefix_hook`). `testtools.lua` is now identical in Witcher Speed Toggle 1.2.1 and Witcher Engine Fix, so installing this mod after Engine Fix no longer turns off Engine Fix's load/save-menu fix.
+
 ## 1.0.1
 
 - Fixed: Space no longer lost its pause. A bound key never reaches the game, so outside the loot window the hotkey now sends the game's own pause toggle (`TogglePauseRequest`). In shops and storage it still does nothing.
