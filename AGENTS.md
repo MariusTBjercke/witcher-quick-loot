@@ -38,6 +38,10 @@ A mod for The Witcher: Enhanced Edition 1.5 that adds a hotkey (default Space). 
 - **Pause:** in `FUN_00423bd0`, action `0x60` (Space) calls `FUN_0041bdc0` → `FUN_00429630` → `FUN_00429210(6, 0x18, 0, 0)`, the toggle-pause request to the internal server. Lua reaches the same path through `CClientExoApp:TogglePauseRequest()` (binding `FUN_006131e0` → `FUN_00402ac0` → `FUN_0041bdc0`); the instance is `g_pClientExoApp`. Lua is told afterwards through the GUI events `pause.on` / `pause.off` (`gui.luc`), which show the pause panel and set `g_GuiInGame.lm_bUserPause`. `g_GuiInGame:SendSetPauseState(type, bPause, bFlag)` (`FUN_004448a0`, message 8/4) is a different, absolute set-pause path, used to cancel pause in dialogs. Do not use it for the user pause.
 - `QuickLoot_TakeAllOrPause()` only pauses when `not g_GuiInGame:IsAnyPanelOpen()`, matching the vanilla key, which skips pause while a modal GUI is up. It always unpauses when `lm_bUserPause` is set.
 
+## Witcher Engine Fix includes this mod
+
+Engine Fix 0.6.0 ships the same logic as QoL 4 (`EngineFix_QuickLoot` in its `enginefix_hook.lua`, script `ef_lootall`, settings `[qol] quick_loot` / `quick_loot_key` in `witcher_enginefix.ini`). The names differ on purpose, so no resource or binding is shared. While `System\Scripts\quickloot_hook.lua` exists, Engine Fix binds nothing and only unbinds its own `ef_lootall` lines; without it, it also unbinds leftover `runscript lootall` lines. A behaviour change here should go into Engine Fix's copy too (its `docs/fixes/qol4-quick-loot.md`).
+
 ## Shared loader rules
 
 - `mod/System/Scripts/testtools.lua` must stay **byte-identical** across all mods that ship it: witcher-speed-toggle, witcher-quick-loot and [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix) (hook `enginefix_hook`). The game's Lua cannot list a folder (there is no `CFileFind` or directory binding), so the loader names every hook in `HOOKS`. A new mod that uses the loader adds its hook name there; then bump the "loader version" comment and release every mod that ships the loader.

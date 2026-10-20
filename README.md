@@ -12,6 +12,8 @@ A **Take all** hotkey for the loot window in **The Witcher: Enhanced Edition**. 
 - **Pause** sends the same pause toggle the game's Space key sends, so the pause menu and unpausing behave as in the vanilla game. As in vanilla, Space does not pause while another panel (map, journal, …) is open.
 - All three cases were tested in game.
 
+> **Also part of [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix).** Since Engine Fix 0.6.0 the same hotkey is built in (`[qol] quick_loot` in its ini). If you use Engine Fix, you do not need this mod. Keeping both is fine: while Quick Loot is installed, its settings are used and Engine Fix stays out of the way.
+
 ## Requirements
 
 - The Witcher: Enhanced Edition, patch **1.5** (Steam or GOG, Director's Cut). Tested on Steam 1.5.0.1304.
@@ -69,11 +71,12 @@ What has been tested: `SPACE` on the Steam version.
 
 1. Delete `Data\Override\QuickLoot` and `System\Scripts\quickloot_hook.lua`.
 2. Also delete `System\Scripts\testtools.lua`, unless [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) or [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix) is installed, because they use the same file.
-3. Delete `System\keybinding.ini`, or remove its `SPACE runscript lootall` line. Otherwise the engine keeps the binding and Space stays without pause.
+3. Delete `System\keybinding.ini`, or remove its `SPACE runscript lootall` line. Otherwise the engine keeps the binding and Space stays without pause. With Witcher Engine Fix 0.6.0 or newer installed, skip this step: Engine Fix replaces the line on the next start.
 
 ## Compatibility
 
 - `System\Scripts\testtools.lua` is a shared loader. It is the only Lua file the game runs on startup that the retail release does not ship. [Witcher Speed Toggle](https://github.com/MariusTBjercke/witcher-speed-toggle) (1.2.1 or newer) and [Witcher Engine Fix](https://github.com/MariusTBjercke/witcher-enginefix) ship the identical file (loader version 2), so the mods can be installed in any order. Speed Toggle **1.0.0** ships an older, single-mod version of that file: installing it after this mod turns the loot hotkey off. Speed Toggle 1.1.0 to 1.2.0 and Quick Loot 1.0.1 and older ship loader version 1, which does not run Engine Fix's hook: installing one of them after Engine Fix turns off its load/save-menu fix. Update both mods to the latest version. A mod from another author that replaces `testtools.lua` would break the hotkey; merge the two files by hand.
+- **Witcher Engine Fix 0.6.0+** has this hotkey built in, under other names (`ef_lootall`, `EngineFix_QuickLoot`). When `quickloot_hook.lua` is installed, Engine Fix binds nothing and this mod's settings count, whichever was installed first; its log says `qol 4 (quick loot hotkey): Witcher Quick Loot is installed`. Both cases were tested in game.
 
 ## How it works
 
