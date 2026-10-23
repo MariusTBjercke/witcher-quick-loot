@@ -75,7 +75,9 @@ COMPATIBILITY / NOTES
 - System\Scripts\testtools.lua is a shared loader: the retail game runs it on startup
   but does not ship it. Witcher Speed Toggle 1.2.1+ and Witcher Engine Fix
   (https://github.com/MariusTBjercke/witcher-enginefix) ship the identical file
-  (loader version 2), so the mods can be installed in any order. Speed Toggle 1.0.0
+  (loader version 3 since Speed Toggle 1.2.2 and Engine Fix 0.7.1), so the mods can
+  be installed in any order. Version 3 binds the hotkey again after "Full screen" or
+  the resolution is changed in the options. Speed Toggle 1.0.0
   ships an older version of that file - installing it after this mod turns the loot
   hotkey off. Speed Toggle 1.1.0 to 1.2.0 and Quick Loot 1.0.1 and older ship loader
   version 1, which does not run Engine Fix's hook - installing one of them after

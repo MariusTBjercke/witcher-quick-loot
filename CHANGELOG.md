@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Shared loader version 3: a hotkey other than Space keeps working after "Full screen" or the resolution is changed in the options. The engine rebuilt its input handling on every video mode change and forgot every key bound with `bindkey` (Space survived because the game uses it too); the loader now binds them again right after. Identical in Witcher Speed Toggle 1.2.2 and Witcher Engine Fix 0.7.1.
+
 ## 1.0.2
 
 - Shared loader version 2: also runs Witcher Engine Fix's hook (`enginefix_hook`). `testtools.lua` is now identical in Witcher Speed Toggle 1.2.1 and Witcher Engine Fix, so installing this mod after Engine Fix no longer turns off Engine Fix's load/save-menu fix.
